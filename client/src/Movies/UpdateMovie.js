@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 
 const initialState = {
     id: 0,
@@ -12,7 +12,8 @@ const initialState = {
 
 const UpdateMovie = (props) => {
     const params = useParams()
-    const [movie, setMovie] = useState({})
+    const { push } = useHistory()
+    const [movie, setMovie] = useState(initialState)
     const [stars, setStars] = useState([])
 
     useEffect(() => {
@@ -47,7 +48,13 @@ const UpdateMovie = (props) => {
     const handleSubmit = e => {
         e.preventDefault();
 
-        console.log(movie)
+        axios.put(`http://localhost:5000/api/movies/${params.id}`, movie)
+        .then(res => {
+            console.log(res)
+            setMovie(initialState)
+            push('/')
+        })
+        .catch(err => console.error(err.response))
     }
     
     
